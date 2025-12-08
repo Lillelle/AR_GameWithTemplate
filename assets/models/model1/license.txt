@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sierra the Trailblazer
+* source:	https://sketchfab.com/3d-models/sierra-the-trailblazer-1aa1024827a743848b979a5530075506
+* author:	AaronNg (https://sketchfab.com/AaronNg)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sierra the Trailblazer" (https://sketchfab.com/3d-models/sierra-the-trailblazer-1aa1024827a743848b979a5530075506) by AaronNg (https://sketchfab.com/AaronNg) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

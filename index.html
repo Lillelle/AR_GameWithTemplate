@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Olympus Rising</title>
+  
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <audio id="ambientAudio" src="assets/sounds/backgroundloop.mp3" loop></audio>
+
+  <button id="voiceToggle" aria-label="Toggle sound">🔇</button>
+
+  <div id="gameContainer">
+    <div id="contentBox">
+      <h1 id="title"></h1>
+      <p id="storyText"></p>
+      <div id="buttonsContainer"></div>
+    </div>
+  </div>
+
+  <div id="ar-layer" style="display: none;">
+    
+    <div id="scan-ui">
+        <button id="ar-back-button">Return to Story</button> 
+        
+        <div class="reticle"></div>
+        
+        <div class="instruction-box" id="status-text">Scan a Mission Card...</div>
+    </div>
+
+    <div id="unity-container" style="display: none;">
+        <iframe id="unity-iframe" src="unity_build/index.html"></iframe>
+    </div>
+
+    <a-scene 
+        mindar-image="imageTargetSrc: ./assets/targets/targets.mind; autoStart: false; uiScanning: no;"
+        color-space="sRGB" 
+        renderer="colorManagement: true, physicallyCorrectLights" 
+        vr-mode-ui="enabled: false" 
+        device-orientation-permission-ui="enabled: false"
+        embedded>
+
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <a-entity id="target-0" mindar-image-target="targetIndex: 0"></a-entity>
+        <a-entity id="target-1" mindar-image-target="targetIndex: 1"></a-entity>
+
+    </a-scene>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

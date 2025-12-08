@@ -1,0 +1,201 @@
+﻿/* ======================================================================
+   BASE PAGE
+   ====================================================================== */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;   /* Προστασία από scroll όταν το background είναι fullscreen */
+}
+
+
+/* ======================================================================
+   SOUND TOGGLE (ΦΩΝΗ / AMBIENT)
+   ====================================================================== */
+#voiceToggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#voiceToggle.active {
+  background: rgba(0,140,0,0.7); /* Πράσινο όταν ο ήχος είναι ενεργός */
+}
+
+
+/* ======================================================================
+   MAIN GAME CONTAINER
+   ====================================================================== */
+#gameContainer {
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ======================================================================
+   CONTENT BOX (ΚΕΝΤΡΙΚΗ ΚΑΡΤΑ)
+   ====================================================================== */
+#contentBox {
+  background: rgba(0,0,0,0.6);     /* Ημιδιάφανο για να φαίνεται το background */
+  padding: 24px 28px;
+  border-radius: 16px;
+  max-width: 900px;
+  width: 92%;
+  text-align: center;
+  backdrop-filter: blur(2px);
+}
+
+#title {
+  font-size: 2rem;
+  margin: 0 0 12px;
+}
+
+#storyText {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+
+
+/* ======================================================================
+   MAIN BUTTONS
+   ====================================================================== */
+#buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#buttonsContainer button {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  font-size: 1.05rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+#buttonsContainer button:hover {
+  background-color: #666;
+}
+
+
+/* ======================================================================
+   UTILITY
+   ====================================================================== */
+.hidden { display: none !important; }
+
+
+/* ======================================================================
+   AR & UNITY LAYER (ΝΕΟ ΤΜΗΜΑ)
+   ====================================================================== */
+
+/* Το βασικό container που περιέχει την κάμερα και το Unity. 
+   Είναι πάνω από το gameContainer (z-index 2000). */
+#ar-layer {
+  position: fixed; 
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  z-index: 2000; 
+  background: black; /* Μαύρο φόντο μέχρι να φορτώσει η κάμερα */
+}
+
+/* Εξασφαλίζουμε ότι το A-Frame πιάνει όλο τον χώρο */
+#ar-layer a-scene {
+  width: 100%; 
+  height: 100%;
+  position: absolute; 
+  top: 0; 
+  left: 0;
+}
+
+/* --- UI Σάρωσης (Κουμπιά & Στόχαστρο) --- */
+#scan-ui {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  pointer-events: none; /* Για να "περνάνε" τα κλικ από κάτω αν χρειαστεί */
+  z-index: 2001; /* Πάνω από την κάμερα */
+}
+
+/* Κουμπί επιστροφής στο Story Mode */
+#ar-back-button {
+  pointer-events: auto; /* Αυτό πρέπει να πατιέται */
+  position: absolute; 
+  top: 15px; 
+  left: 15px;
+  background-color: #c62828; /* Κόκκινο για να ξεχωρίζει */
+  color: #fff;
+  border: none; 
+  padding: 10px 20px;
+  border-radius: 8px; 
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/* Το κεντρικό πλαίσιο στόχευσης */
+.reticle {
+  width: 200px; 
+  height: 200px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  position: absolute; 
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+}
+
+/* Πλαίσιο οδηγιών (κάτω μέρος) */
+.instruction-box {
+  position: absolute; 
+  bottom: 50px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.6); 
+  color: white;
+  padding: 10px 20px; 
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+  font-size: 1.1rem;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* --- Unity Overlay --- */
+#unity-container {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  z-index: 3000; /* Το πιο πάνω layer από όλα */
+  background: black;
+}
+
+#unity-iframe { 
+  width: 100%; 
+  height: 100%; 
+  border: none; 
+}

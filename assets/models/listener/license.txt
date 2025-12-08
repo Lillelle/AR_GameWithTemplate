@@ -1,0 +1,11 @@
+Model Information:
+* title:	Midnight Listener
+* source:	https://sketchfab.com/3d-models/midnight-listener-5774a18fa9f54b1e9e85ee3b693c8fde
+* author:	Brian Trepanier (https://sketchfab.com/CMBC)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Midnight Listener" (https://sketchfab.com/3d-models/midnight-listener-5774a18fa9f54b1e9e85ee3b693c8fde) by Brian Trepanier (https://sketchfab.com/CMBC) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

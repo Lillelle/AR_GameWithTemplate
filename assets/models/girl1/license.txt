@@ -1,0 +1,11 @@
+Model Information:
+* title:	Girl With Glasses
+* source:	https://sketchfab.com/3d-models/girl-with-glasses-094ee5dcb94e4b8787d314662be3a80e
+* author:	emperial.rat (https://sketchfab.com/emperial.rat)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Girl With Glasses" (https://sketchfab.com/3d-models/girl-with-glasses-094ee5dcb94e4b8787d314662be3a80e) by emperial.rat (https://sketchfab.com/emperial.rat) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

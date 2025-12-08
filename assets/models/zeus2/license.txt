@@ -1,0 +1,8 @@
+Model Information:
+* title:	Zeus Master of Olympus
+* source:	https://sketchfab.com/3d-models/zeus-master-of-olympus-e15f7c7eb3cc4f8ab58f6ea74df03982
+* author:	Trident.AI (https://sketchfab.com/Trident.AI)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AR Experience</title>
+
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    /* 2. The Style: Matches the School Template (Fonts, Colors) */
+    body { 
+      margin: 0; overflow: hidden; 
+      font-family: 'Trebuchet MS', Arial, sans-serif; /* Same font as template */
+    }
+
+    /* The 'Return' button - Styled exactly like the template */
+    #ui-layer {
+      position: absolute; top: 10px; left: 0; width: 100%;
+      z-index: 1000; pointer-events: none;
+      text-align: center;
+    }
+    #return-button {
+      pointer-events: auto;
+      background-color: #444; /* Template dark grey */
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    /* Your Scan Instruction - Styled to match the 'Content Box' from template */
+    #scan-instruction {
+      position: absolute; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: rgba(0,0,0,0.6); /* Template transparent black */
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 16px;
+      backdrop-filter: blur(2px);
+      font-size: 1.1rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* The Reticle (Your Visual Aid) */
+    .reticle {
+      width: 200px; height: 200px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 20px;
+      pointer-events: none;
+      z-index: 900;
+    }
+
+    /* The Unity Overlay (Hidden by default) */
+    #unity-container {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 999; 
+      background: #000; 
+      display: none;
+    }
+    iframe { width: 100%; height: 100%; border: none; }
+  </style>
+</head>
+
+<body>
+
+  <div id="ui-layer">
+    <button id="return-button">Return to Story</button>
+  </div>
+
+  <div id="scan-instruction">Scan your card to begin...</div>
+  <div class="reticle"></div>
+
+  <div id="unity-container">
+    <iframe id="unity-iframe" src="unity_build/index.html"></iframe>
+  </div>
+
+  <a-scene 
+      mindar-image="imageTargetSrc: ./assets/targets/targets.mind; uiScanning: no;"
+      color-space="sRGB" 
+      renderer="colorManagement: true, physicallyCorrectLights" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false">
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity id="target-0" mindar-image-target="targetIndex: 0"></a-entity>
+      <a-entity id="target-1" mindar-image-target="targetIndex: 1"></a-entity>
+      </a-scene>
+
+  <script>
+    // --- 1. TEMPLATE NAVIGATION LOGIC ---
+    const params = new URLSearchParams(window.location.search);
+    const fromSection = params.get('from') || 'lore';
+    
+    document.getElementById("return-button").addEventListener("click", () => {
+      // Sends user back to main story where they left off
+      window.location.href = `index.html?section=${fromSection}`;
+    });
+
+    // --- 2. YOUR UNITY INTEGRATION LOGIC ---
+    const arScene = document.querySelector('a-scene');
+    const unityContainer = document.getElementById('unity-container');
+    const unityIframe = document.getElementById('unity-iframe');
+    const instructionText = document.getElementById('scan-instruction');
+    let pendingMissionId = null;
+
+    // Detect Targets
+    arScene.addEventListener('loaded', () => {
+      // Add listeners for as many targets as you have
+      const t0 = document.getElementById('target-0');
+      if(t0) t0.addEventListener('targetFound', () => launchUnity(1)); // Mission 1
+
+      const t1 = document.getElementById('target-1');
+      if(t1) t1.addEventListener('targetFound', () => launchUnity(2)); // Mission 2
+    });
+
+    function launchUnity(missionID) {
+      console.log("Target found! Launching Unity Mission: " + missionID);
+      
+      // Update UI
+      instructionText.innerText = "Loading Simulation...";
+      
+      // Pause AR to save performance
+      const arSystem = arScene.systems['mindar-image-system'];
+      if (arSystem) arSystem.pause();
+
+      // Hide AR Video Feed
+      const video = document.querySelector('video');
+      if (video) video.style.display = 'none';
+
+      // Show Unity
+      unityContainer.style.display = 'block';
+
+      // Send Message to Unity
+      pendingMissionId = missionID;
+      attemptUnityHandshake();
+    }
+
+    function attemptUnityHandshake() {
+      if (unityIframe.contentWindow && unityIframe.contentWindow.unityInstance) {
+        // Send data to Unity function: LoadMission(int id)
+        unityIframe.contentWindow.unityInstance.SendMessage('GameManager', 'LoadMission', pendingMissionId);
+      } else {
+        setTimeout(attemptUnityHandshake, 500);
+      }
+    }
+
+    // Function to close Unity and go back to AR (Call this from Unity)
+    window.closeUnity = function() {
+       unityContainer.style.display = 'none';
+       const video = document.querySelector('video');
+       if (video) video.style.display = 'block';
+       
+       const arSystem = arScene.systems['mindar-image-system'];
+       if (arSystem) arSystem.unpause();
+       
+       instructionText.innerText = "Scan your card to begin...";
+    }
+  </script>
+</body>
+</html>
