@@ -208,15 +208,14 @@ function enterARMode() {
 document.getElementById('ar-back-button').addEventListener('click', () => {
   // Stop Camera
   if (arSystem) {
-      arSystem.stop(); // Stops video processing
+      arSystem.stop(); 
   }
 
   // Hide AR, Show Story
   arLayer.style.display = 'none';
-  gameContainer.style.display = 'flex'; // Restore flex layout
+  gameContainer.style.display = 'flex'; 
   
-  // Resume ambient music if needed
-  // playAmbient(); 
+  
 });
 
 // 3. Unity Logic (Triggered by Targets)

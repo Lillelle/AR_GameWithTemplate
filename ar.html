@@ -9,13 +9,13 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    /* 2. The Style: Matches the School Template (Fonts, Colors) */
+    
     body { 
       margin: 0; overflow: hidden; 
-      font-family: 'Trebuchet MS', Arial, sans-serif; /* Same font as template */
+      font-family: 'Trebuchet MS', Arial, sans-serif; 
     }
 
-    /* The 'Return' button - Styled exactly like the template */
+    
     #ui-layer {
       position: absolute; top: 10px; left: 0; width: 100%;
       z-index: 1000; pointer-events: none;
@@ -23,7 +23,7 @@
     }
     #return-button {
       pointer-events: auto;
-      background-color: #444; /* Template dark grey */
+      background-color: #444; 
       color: #fff;
       border: none;
       padding: 12px 24px;
@@ -33,12 +33,12 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     }
 
-    /* Your Scan Instruction - Styled to match the 'Content Box' from template */
+    
     #scan-instruction {
       position: absolute; bottom: 40px; left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
-      background: rgba(0,0,0,0.6); /* Template transparent black */
+      background: rgba(0,0,0,0.6); 
       color: #fff;
       padding: 12px 24px;
       border-radius: 16px;
@@ -48,7 +48,7 @@
       border: 1px solid rgba(255,255,255,0.2);
     }
 
-    /* The Reticle (Your Visual Aid) */
+    
     .reticle {
       width: 200px; height: 200px;
       border: 2px solid rgba(255, 255, 255, 0.5);
@@ -59,7 +59,7 @@
       z-index: 900;
     }
 
-    /* The Unity Overlay (Hidden by default) */
+    
     #unity-container {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 999; 
