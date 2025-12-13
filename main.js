@@ -1,6 +1,6 @@
 ﻿// ===== Global state & helpers =====
-const ambientAudio = document.getElementById("ambientAudio");
-const voiceToggle  = document.getElementById("voiceToggle");
+// const ambientAudio = document.getElementById("ambientAudio");
+// const voiceToggle  = document.getElementById("voiceToggle");
 const titleEl      = document.getElementById("title");
 const storyEl      = document.getElementById("storyText");
 const buttonsEl    = document.getElementById("buttonsContainer");
@@ -13,14 +13,10 @@ let currentStage = "intro";
 // ===== Stage data =====
 const STAGES = {
   intro: {
-    bg: "assets/intro.png",
-    title: "AR Experience",
-    text: `Sth about the setting.`,
+    title: "The Craftsmen of Archaic Korkyra",
+    text: `Learn about the ancient world of Corfu through the eyes of skilled artisans.<br> Click <b>"continue"</b> once you are ready.`,
     buttons: [
-      { label: "Start", action: () => {
-          enableSound();
-          playAmbient();
-          speak(STAGES.intro.text);
+      { label: "Continue", action: () => {
           buttonsEl.innerHTML = "";
           const contBtn = document.createElement("button");
           contBtn.textContent = "Continue";
@@ -31,21 +27,19 @@ const STAGES = {
   },
 
   role: {
-    bg: "assets/role-selection.png",
     title: "Your Quest",
-    text: `Explore and reveal what lies hidden.`,
+    text: `Search and scan the markers scattered around the museum to unlock different customers.<br> Complete their requests to earn <b>coins</b>!`,
     buttons: [
-      { label: "Lore Keeper", action: () => goTo("lore") },
-      { label: "Instructions", action: () => goTo("instructions") }
+      { label: "Continue", action: () => goTo("Main_Screen") },
+      { label: "Game Instructions", action: () => goTo("instructions") }
     ]
   },
 
-  lore: {
-    bg: "assets/lore-keeper.png",
-    title: "Lore Keeper",
-    text: `Use AR to uncover traces. Each clue will reveal a part of the story.`,
+  Main_Screen: {
+    title: "Main Hub",
+    text: `Click "Go!" to enter AR Mode and start looking for markers.\n Once you have collected enough <b>coins</b>, click "Finish Task" to complete the experience.`,
     buttons: [
-      { label: "Explore via AR", action: () => {
+      { label: "Go!", action: () => {
           
           enterARMode()
       }},
@@ -55,13 +49,13 @@ const STAGES = {
   },
 
   instructions: {
-    bg: "assets/instructions.png",
     title: "How to Play — Overview",
     text: `
-      • You play as the <b>Lore Keeper</b>.<br>
+      • You play as different types of craftsmen & artisans of the Archaic Era.<br>
       • Use your device camera to scan AR markers hidden in the environment.<br>
-      • Each marker reveals a voice message or a symbol.<br>
-      • Collect all the pieces, then finish your task.<br>
+      • Each marker reflects a different customer, based on the different casts of the time<br>
+      • Choose the correct type of craftsman to fit your customer's needs, and make the propper item combinations<br>
+      • If in doubt, read up info about the items requested by tapping on them!<br>
     `,
     buttons: [
       { label: "Back", action: () => goTo("role") }
@@ -70,11 +64,10 @@ const STAGES = {
 
   // ——— Minimal edits so the end "has meaning" ———
   end: {
-  bg: "assets/olympus.jpg",
-  title: "Ολοκλήρωση",
-  text: `Ολοκλήρωσες το ταξίδι σου.<br><br>Θέλεις να ξαναρχίσεις;`,
+  title: "Congratulations!",
+  text: `You have mastered the crafts of the Archaic Era.<br> Would you like to play again;`,
   buttons: [
-    { label: "Ξεκίνημα ξανά", action: () => goTo("intro", true) }
+    { label: "Play Again", action: () => goTo("intro", true) }
   ]
 }
 };
@@ -101,7 +94,7 @@ function playAmbient() {
 }
 
 function stopAmbient() { ambientAudio.pause(); }
-
+/*
 function cancelNarration() {
   try {
     if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
@@ -132,7 +125,7 @@ voiceToggle.addEventListener("click", () => {
     if (STAGES[currentStage]) speak(STAGES[currentStage].text);
   }
 });
-
+*/
 // ===== Navigation =====
 function goTo(stage, resetAll = false) {
   // If called as Restart with resetAll=true, do a soft reset so the action έχει νόημα

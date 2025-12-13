@@ -6,7 +6,7 @@
 body {
   margin: 0;
   font-family: 'Trebuchet MS', Arial, sans-serif;
-  background-color: #000;
+  background-color: #c9a380;
   color: #fff;
   overflow: hidden;   /* Προστασία από scroll όταν το background είναι fullscreen */
 }
