@@ -10,6 +10,9 @@ let soundEnabled = false;
 let narrationUtterance = null;
 let currentStage = "intro";
 
+let totalScore = 0; 
+const REQUIRED_SCORE = 3;
+
 // ===== Stage data =====
 const STAGES = {
   intro: {
@@ -35,18 +38,23 @@ const STAGES = {
     ]
   },
 
-  Main_Screen: {
+Main_Screen: {
     title: "Main Hub",
-    text: `Click "Go!" to enter AR Mode and start looking for markers.\n Once you have collected enough <b>coins</b>, click "Finish Task" to complete the experience.`,
+    text: `Complete all missions to earn 3 coins.`,
     buttons: [
-      { label: "Go!", action: () => {
-          
-          enterARMode()
-      }},
-      { label: "Finish Task", action: () => goTo("end") },
-      { label: "Back", action: () => goTo("role") }
+      { label: "Go!", action: () => enterARMode() },
+      { 
+        label: "Finish Task", 
+        action: () => {
+            if (totalScore >= REQUIRED_SCORE) {
+                goTo("end");
+            } else {
+                alert(`You need 3 coins to finish. You have ${totalScore}.`);
+            }
+        } 
+      }
     ]
-  },
+},
 
   instructions: {
     title: "How to Play — Overview",
@@ -213,20 +221,24 @@ document.getElementById('ar-back-button').addEventListener('click', () => {
 
 // 3. Unity Logic (Triggered by Targets)
 arScene.addEventListener('loaded', () => {
-    // Listen for Target 0
     const t0 = document.getElementById('target-0');
     if(t0) t0.addEventListener('targetFound', () => launchUnity(1));
 
-    // Listen for Target 1
     const t1 = document.getElementById('target-1');
     if(t1) t1.addEventListener('targetFound', () => launchUnity(2));
+
+    // ADD THIS FOR THE THIRD TARGET
+    const t2 = document.getElementById('target-2');
+    if(t2) t2.addEventListener('targetFound', () => launchUnity(3));
 });
 
 function launchUnity(missionID) {
     statusText.innerText = "Loading Simulation...";
     
+    
     // Pause AR processing to save performance
     stopAmbient();
+    
     if (arSystem) arSystem.pause();
     
     // Hide AR Camera UI (Video)
@@ -257,9 +269,6 @@ window.closeUnity = function() {
    if(video) video.style.display = 'block';
    
    if (arSystem) arSystem.unpause();
-   
-   statusText.innerText = "Scan next card...";
-
    playAmbient();
 };
 
@@ -269,3 +278,38 @@ window.addEventListener("message", (event) => {
         window.closeUnity();
     }
 });
+
+// Listen for the "teleportation" message from the Unity Iframe
+window.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "UNITY_SCORE") {
+        console.log("Score received from Unity via PostMessage:", event.data.score);
+        
+        // Call the score function we wrote earlier
+        if (typeof window.handleUnityScore === "function") {
+            window.handleUnityScore(event.data.score);
+        }
+    }
+});
+
+// The actual logic to update the coins
+let completedMissions = new Set();
+
+window.handleUnityScore = function(amount) {
+    // Instead of using 'amount' (which is always 1), 
+    // we use the 'pendingMissionId' of the card currently being played.
+    if (pendingMissionId) {
+        completedMissions.add(pendingMissionId);
+        
+        // The total score is now the number of UNIQUE cards completed
+        totalScore = completedMissions.size; 
+        
+        console.log("Logged Mission ID:", pendingMissionId, "| Total:", totalScore);
+        
+        const statusText = document.getElementById('status-text');
+        if (statusText) {
+            statusText.innerText = `Missions: ${totalScore}/3 complete!`;
+        }
+    } else {
+        console.warn("Unity reported a win, but no pendingMissionId was found.");
+    }
+};

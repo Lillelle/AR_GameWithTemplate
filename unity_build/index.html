@@ -6,11 +6,19 @@
     <title>Unity Web Player | UnityARgame</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+    <style>
+      /* Force the "Cinema Mode" look via CSS for better stability */
+      body {
+        margin: 0; padding: 0; background: #000000; overflow: hidden;
+        display: flex; justify-content: center; align-items: center;
+        height: 100vh; width: 100vw;
+      }
+      #unity-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+    </style>
   </head>
   <body>
-    <div id="unity-container" class="unity-desktop">
+    <div id="unity-container">
       <canvas id="unity-canvas" tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
@@ -26,28 +34,10 @@
       var canvas = document.querySelector("#unity-canvas");
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var warningBanner = document.querySelector("#unity-warning");
 
-      // --- 1. SETUP VISUALS (Black Background & Centering) ---
-      // This forces the "Cinema Mode" look
-      document.body.style.margin = "0";
-      document.body.style.padding = "0";
-      document.body.style.background = "#000000"; // Black bars
-      document.body.style.overflow = "hidden"; // No scrollbars
-      document.body.style.display = "flex";
-      document.body.style.justifyContent = "center";
-      document.body.style.alignItems = "center";
-      document.body.style.height = "100vh";
-      document.body.style.width = "100vw";
-
-      // Clear default Unity styles that might interfere
-      canvas.style.width = "";
-      canvas.style.height = "";
-      container.className = ""; 
-
-      // --- 2. THE SMART SCALER (Maintains 9:16 Ratio) ---
+      // --- 1. THE SMART SCALER (Maintains 9:16 Ratio) ---
       function resizeGame() {
-          var gameAspectRatio = 9 / 16; // The shape of your phone game
+          var gameAspectRatio = 9 / 16; 
           var windowWidth = window.innerWidth;
           var windowHeight = window.innerHeight;
           var windowRatio = windowWidth / windowHeight;
@@ -55,30 +45,32 @@
           var finalWidth, finalHeight;
 
           if (windowRatio > gameAspectRatio) {
-              // Screen is wide (PC) -> Max out Height, calculate Width
               finalHeight = windowHeight;
               finalWidth = finalHeight * gameAspectRatio;
           } else {
-              // Screen is tall (Mobile) -> Max out Width, calculate Height
               finalWidth = windowWidth;
               finalHeight = finalWidth / gameAspectRatio;
           }
 
-          // Apply to Canvas
           canvas.style.width = finalWidth + "px";
           canvas.style.height = finalHeight + "px";
       }
 
-      // Run resize immediately and whenever the window changes
       window.addEventListener('resize', resizeGame);
       resizeGame(); 
 
-      // --- 3. UNITY CONFIG ---
+
+      window.addScore = function(amount) {
+      // PostMessage is the "teleportation" tool for data between iframes
+      window.parent.postMessage({ 
+          type: "UNITY_SCORE", 
+          score: amount 
+      }, "*"); 
+};
+
+      // --- 2. UNITY CONFIG (Using your ORIGINAL filenames) ---
       function unityShowBanner(msg, type) {
         var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
         var div = document.createElement('div');
         div.innerHTML = msg;
         warningBanner.appendChild(div);
@@ -87,19 +79,17 @@
           if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
           setTimeout(function() {
             warningBanner.removeChild(div);
-            updateBannerVisibility();
           }, 5000);
         }
-        updateBannerVisibility();
       }
 
       var buildUrl = "Build";
-      // IMPORTANT: I used your filenames ("New Unity Build")
-      var loaderUrl = buildUrl + "/New Unity Build.loader.js";
+      // These names are restored from your first version so the files load correctly
+      var loaderUrl = buildUrl + "/ArGameUnityBuildTestFolder.loader.js";
       var config = {
-        dataUrl: buildUrl + "/New Unity Build.data",
-        frameworkUrl: buildUrl + "/New Unity Build.framework.js",
-        codeUrl: buildUrl + "/New Unity Build.wasm",
+        dataUrl: buildUrl + "/ArGameUnityBuildTestFolder.data",
+        frameworkUrl: buildUrl + "/ArGameUnityBuildTestFolder.framework.js",
+        codeUrl: buildUrl + "/ArGameUnityBuildTestFolder.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "UnityARgame",
@@ -107,7 +97,7 @@
         showBanner: unityShowBanner,
       };
 
-      // --- 4. LOAD UNITY ---
+      // --- 3. LOAD UNITY ---
       loadingBar.style.display = "block";
 
       var script = document.createElement("script");
@@ -116,10 +106,9 @@
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
-          // Game Loaded!
           loadingBar.style.display = "none";
-          window.unityInstance = unityInstance; // Necessary for your Main.js handshake
-          resizeGame(); // Force one last resize to be perfect
+          window.unityInstance = unityInstance;
+          resizeGame(); 
         }).catch((message) => {
           alert(message);
         });
