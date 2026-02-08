@@ -1,6 +1,6 @@
 ﻿// ===== Global state & helpers =====
-// const ambientAudio = document.getElementById("ambientAudio");
-// const voiceToggle  = document.getElementById("voiceToggle");
+const ambientAudio = document.getElementById("ambientAudio");
+const voiceToggle  = document.getElementById("voiceToggle");
 const titleEl      = document.getElementById("title");
 const storyEl      = document.getElementById("storyText");
 const buttonsEl    = document.getElementById("buttonsContainer");
@@ -19,37 +19,31 @@ const STAGES = {
     title: "The Craftsmen of Archaic Korkyra",
     text: `Learn about the ancient world of Corfu through the eyes of skilled artisans.<br> Click <b>"continue"</b> once you are ready.`,
     buttons: [
-      { label: "Continue", action: () => {
-          buttonsEl.innerHTML = "";
-          const contBtn = document.createElement("button");
-          contBtn.textContent = "Continue";
-          contBtn.addEventListener("click", () => goTo("role"));
-          buttonsEl.appendChild(contBtn);
-      }}
+      { label: "Continue", action: () => goTo("role") }
     ]
   },
 
   role: {
     title: "Your Quest",
-    text: `Search and scan the markers scattered around the museum to unlock different customers.<br> Complete their requests to earn <b>coins</b>!`,
+    text: `Search and scan the markers scattered, representing different customers.<br> Complete their <b>requests</b> to progress!`,
     buttons: [
       { label: "Continue", action: () => goTo("Main_Screen") },
-      { label: "Game Instructions", action: () => goTo("instructions") }
     ]
   },
 
 Main_Screen: {
     title: "Main Hub",
-    text: `Complete all missions to earn 3 coins.`,
+    text: `Complete all customers' requests and finish your quest!<br> Click "Go!" to start scanning for customers!`,
     buttons: [
       { label: "Go!", action: () => enterARMode() },
+      { label: "Game Instructions", action: () => goTo("instructions") }, 
       { 
         label: "Finish Task", 
         action: () => {
             if (totalScore >= REQUIRED_SCORE) {
                 goTo("end");
             } else {
-                alert(`You need 3 coins to finish. You have ${totalScore}.`);
+                alert(`There are 3 customers for you to assist. You have completed: ${totalScore}.`);
             }
         } 
       }
@@ -60,13 +54,13 @@ Main_Screen: {
     title: "How to Play — Overview",
     text: `
       • You play as different types of craftsmen & artisans of the Archaic Era.<br>
-      • Use your device camera to scan AR markers hidden in the environment.<br>
-      • Each marker reflects a different customer, based on the different casts of the time<br>
-      • Choose the correct type of craftsman to fit your customer's needs, and make the propper item combinations<br>
-      • If in doubt, read up info about the items requested by tapping on them!<br>
+      • Explore the Museum, using your device camera to scan AR markers hidden within it.<br>
+      • Each marker reflects a different customer, based on the different casts and vocations of the time<br>
+      • Complete their requests in any order, by making proper material combinations<br>
+      • After you are done, return to the Main Hub to learn more about these items in the library!<br>
     `,
     buttons: [
-      { label: "Back", action: () => goTo("role") }
+      { label: "Back", action: () => goTo("Main_Screen") }
     ]
   },
 
@@ -75,7 +69,9 @@ Main_Screen: {
   title: "Congratulations!",
   text: `You have mastered the crafts of the Archaic Era.<br> Would you like to play again;`,
   buttons: [
-    { label: "Play Again", action: () => goTo("intro", true) }
+    { label: "Play Again", action: () => {
+        goTo("Main_Screen");
+    }}
   ]
 }
 };
@@ -102,26 +98,9 @@ function playAmbient() {
 }
 
 function stopAmbient() { ambientAudio.pause(); }
-/*
-function cancelNarration() {
-  try {
-    if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
-  } catch {}
-}
 
-function speak(text) {
-  cancelNarration();
-  if (!soundEnabled) return;
-  let plainText = text.replace(/<a[^>]*>.*?<\/a>/gi, "");
-  plainText = plainText.replace(/(<([^>]+)>)/gi, "");
-  plainText = plainText.replace(/&[a-z]+;/gi, " ");
-  plainText = plainText.replace(/\s+/g, " ").trim();
-  const u = new SpeechSynthesisUtterance(plainText);
-  u.lang = "en-GB";
-  u.rate = 1.05;
-  u.pitch = 1.0;
-  narrationUtterance = u;
-  speechSynthesis.speak(u);
+function cancelNarration() {
+  // Text-to-speech disabled
 }
 
 voiceToggle.addEventListener("click", () => {
@@ -130,10 +109,8 @@ voiceToggle.addEventListener("click", () => {
   } else {
     enableSound();
     playAmbient();
-    if (STAGES[currentStage]) speak(STAGES[currentStage].text);
   }
 });
-*/
 // ===== Navigation =====
 function goTo(stage, resetAll = false) {
   // If called as Restart with resetAll=true, do a soft reset so the action έχει νόημα
@@ -159,8 +136,6 @@ function goTo(stage, resetAll = false) {
     btn.addEventListener("click", b.action);
     buttonsEl.appendChild(btn);
   });
-
-  if (soundEnabled) speak(s.text || "");
 }
 
 // ===== Init =====

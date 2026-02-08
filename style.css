@@ -62,7 +62,7 @@ body {
 }
 
 #title {
-  font-size: 2rem;
+  font-size: 3rem;
   margin: 0 0 12px;
 }
 
@@ -70,6 +70,27 @@ body {
   font-size: 1.2rem;
   line-height: 1.6;
   margin: 0 0 18px;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+#storyText::-webkit-scrollbar {
+  width: 8px;
+}
+
+#storyText::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+#storyText::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+#storyText::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 
